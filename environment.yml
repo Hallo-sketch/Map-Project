@@ -1,0 +1,46 @@
+# environment.yml
+name: cocoa-dashboard
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  # Core Python
+  - python=3.11
+  
+  # Data processing
+  - pandas
+  - numpy
+  - scikit-learn
+  
+  # Visualization and Dashboard
+  - plotly
+  - dash
+  - dash-bootstrap-components
+  - streamlit
+  - seaborn
+  - matplotlib
+  
+  # Geospatial (if needed)
+  - geopandas
+  - folium
+  
+  # Development
+  - jupyter
+  - jupyterlab
+  - ipykernel
+  - black
+  - flake8
+  - pytest
+  
+  # Excel support
+  - openpyxl
+  - xlrd
+  
+  # Additional tools
+  - python-dotenv
+  
+  # Pip packages (for packages not in conda)
+  - pip
+  - pip:
+    - great-expectations
+    - pandas-profiling
