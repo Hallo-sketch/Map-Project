@@ -39,8 +39,27 @@ dependencies:
   # Additional tools
   - python-dotenv
   
+  # Geospatial stack
+  - geopandas>=0.14.0
+  - shapely>=2.0.0  # For geometric operations
+  - fiona>=1.9.0   # For reading spatial files
+  - pyproj>=3.6.0  # For projection operations
+  - rtree>=1.0.0   # For spatial indexing
+  - topojson       # For more efficient web mapping
+  - geojson        # For GeoJSON handling
+  - mapclassify    # For choropleth maps
+  - contextily     # For adding background tiles to maps
+  
+  # Visualization enhancements
+  - folium>=0.15.0  # Interactive maps
+  - plotly>=5.18.0  # Interactive visualizations
+  - pydeck         # For deck.gl maps
+  - branca        # Color scales for maps
+
   # Pip packages (for packages not in conda)
   - pip
   - pip:
     - great-expectations
     - pandas-profiling
+    - dash
+    - dash-bootstrap-components

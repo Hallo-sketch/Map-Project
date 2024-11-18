@@ -1,0 +1,95 @@
+/* assets/custom.css */
+
+/* General body styling */
+body {
+    background-color: #272b30;
+    color: #ffffff;
+}
+
+/* Card styling */
+.card {
+    background-color: #32383e !important;
+    border-color: #444444 !important;
+    color: #ffffff;
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: #1c1e22 !important;
+}
+
+/* Dropdown menu styling */
+.dropdown-menu {
+    background-color: #32383e !important;
+    color: #ffffff;
+}
+
+/* Button styling */
+.btn {
+    background-color: #444444 !important;
+    color: #ffffff;
+    border-color: #555555;
+}
+
+.btn:hover {
+    background-color: #555555 !important;
+    border-color: #666666;
+}
+
+/* Adjust headings */
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff;
+}
+
+/* Adjust links */
+a {
+    color: #1e90ff;
+}
+
+a:hover {
+    color: #63b8ff;
+}
+
+/* Adjust dropdowns */
+.Select--single > .Select-control .Select-value {
+    color: #ffffff;
+}
+
+.Select-menu-outer {
+    background-color: #32383e;
+    color: #ffffff;
+}
+
+.Select-option.is-focused {
+    background-color: #3b4147 !important;
+}
+
+/* Adjust input fields */
+input, select, textarea {
+    background-color: #3b4147;
+    color: #ffffff;
+    border-color: #555555;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #666666;
+}
+
+/* Adjust plotly graphs */
+.plotly-graph-div {
+    background-color: #272b30 !important;
+}
+
+/* Dashboard/assets/custom.css */
+.dropdown-menu {
+    background-color: #343a40 !important;
+}
+
+.dropdown-item {
+    color: white !important;
+}
+
+.dropdown-item:hover {
+    background-color: #495057 !important;
+    color: white !important;
+}
