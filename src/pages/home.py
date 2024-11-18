@@ -66,14 +66,14 @@ def load_and_process_data():
 dash.register_page(__name__, path='/')
 
 # Update the container style
+# Container style configurations
 CONTAINER_STYLE = {
-    'marginTop': '70px',
-    'maxWidth': '2000px',
-    'minWidth': '320px',
+    'maxWidth': '2000px',      # Maximum width for very large screens
+    'minWidth': '320px',       # Minimum width for mobile screens
     'margin': 'auto',
-    'padding': '20px',
-    'backgroundColor': '#272b30',  # Dark background color
-    'color': '#ffffff'             # Light text color
+    'color': '#ffffff',        # Text color for dark aesthetic
+    'marginTop': '56px',       # Add margin to account for fixed navbar
+    'paddingTop': '20px'       # Additional padding for spacing
 }
 
 # Update the card style
@@ -825,45 +825,58 @@ def create_decomp_stat_item(label, value, description):
     Input('price-selector', 'value')
 )
 def update_price_scatter_kde(selected_price):
-    price_info = PRICE_MAPPINGS[selected_price]
-    price_column = price_info['column']
-    currency = price_info['currency']
-    price_name = price_info['name']
-    
-    # Extract the price data
-    price_data = futures_df[['Date', price_column]].dropna()
+    import pandas as pd
+    import plotly.graph_objects as go
+    import numpy as np
+    from scipy.stats import gaussian_kde
 
-    # Create a figure with scatter plot and KDE
+    DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
+    # Load the price data
+    price_data = pd.read_csv(os.path.join(DATA_DIR, 'Daily Prices.csv'))  # Update with your actual data file
+
+    # Sort the DataFrame by date
+    price_data_sorted = price_data.sort_values('Date')
+
+    # Extract x and y data using the correct column names
+    x = price_data_sorted['New York futures (US$/tonne)']
+    y = price_data_sorted['London futures (£ sterling/tonne)']
+
+    # Convert x and y to numeric, coercing errors to NaN
+    x = pd.to_numeric(x, errors='coerce')
+    y = pd.to_numeric(y, errors='coerce')
+
+    # Remove any NaN values
+    valid_idx = x.notna() & y.notna()
+    x = x[valid_idx]
+    y = y[valid_idx]
+
+    # Convert to numpy arrays
+    x = x.values
+    y = y.values
+
+    # Calculate point density
+    xy = np.vstack([x, y])
+    z = gaussian_kde(xy)(xy)
+
+    # Sort the points by density
+    idx = z.argsort()
+    x, y, z = x[idx], y[idx], z[idx]
+
+    # Create scatter plot
     fig = go.Figure()
 
-    # Add scatter plot
     fig.add_trace(
         go.Scatter(
-            x=price_data['Date'],
-            y=price_data[price_column],
+            x=x,
+            y=y,
             mode='markers',
-            name='Price',
+            name='Price Data',
             marker=dict(
-                size=4,
-                color=DECOMP_STYLES['graph']['colors']['original'],
-                opacity=0.6
-            )
-        )
-    )
-
-    # Add KDE line (using rolling average as an approximation)
-    price_data_sorted = price_data.sort_values('Date')
-    price_data_sorted['KDE'] = price_data_sorted[price_column].rolling(window=30, center=True).mean()
-
-    fig.add_trace(
-        go.Scatter(
-            x=price_data_sorted['Date'],
-            y=price_data_sorted['KDE'],
-            mode='lines',
-            name='KDE',
-            line=dict(
-                color=DECOMP_STYLES['graph']['colors']['kde'],
-                width=2
+                size=5,
+                color=z,
+                colorscale='Viridis',
+                showscale=True,
+                colorbar=dict(title='Density')
             )
         )
     )
@@ -871,11 +884,11 @@ def update_price_scatter_kde(selected_price):
     # Update layout
     fig.update_layout(
         height=400,
-        showlegend=True,
+        showlegend=False,
         margin=dict(l=50, r=20, t=40, b=50),
         template='plotly_dark',
         title={
-            'text': f'{price_name} Scatter Plot with KDE',
+            'text': 'Scatter Plot of New York vs London Futures Prices with KDE',
             'y': 0.95,
             'x': 0.5,
             'xanchor': 'center',
@@ -883,15 +896,16 @@ def update_price_scatter_kde(selected_price):
             'font': {'size': 14}
         },
         xaxis=dict(
-            title='Date',
+            title='New York Futures Price (US$/tonne)',
             title_font={'size': 12},
             tickfont={'size': 10}
         ),
         yaxis=dict(
-            title=f'Price ({currency}/tonne)',
+            title='London Futures Price (£ sterling/tonne)',
             title_font={'size': 12},
             tickfont={'size': 10}
         )
     )
 
     return fig
+    
